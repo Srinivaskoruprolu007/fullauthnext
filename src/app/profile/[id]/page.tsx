@@ -1,6 +1,10 @@
-type params = Promise<{ id: string }>;
+type paramsType = Promise<{ id: string }>;
 
-export default async function UserProfile({ params }: { params: params }) {
+type props = {
+  params: paramsType;
+};
+
+export default async function UserProfile({ params }: props) {
   const { id } = await params;
 
   return (
