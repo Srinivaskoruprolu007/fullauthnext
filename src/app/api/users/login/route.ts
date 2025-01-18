@@ -12,28 +12,31 @@ export async function POST(request: NextRequest) {
     const { email, password } = reqBody;
     console.log(reqBody);
 
-    // check if user already
+    // Check if user exists
     const user = await User.findOne({ email: email });
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 400 });
-    }
-    // check if password is correct
-    const validPassword = await bcryptjs.compare(password, user.password);
-    if (!validPassword) {
-      return NextResponse.json({ error: "Invalid Password" }, { status: 400 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 }); // Changed to 404
     }
 
-    // create token data
+    // Check if password is correct
+    const validPassword = await bcryptjs.compare(password, user.password);
+    if (!validPassword) {
+      return NextResponse.json({ error: "Invalid Password" }, { status: 401 }); // Changed to 401
+    }
+
+    // Create token data
     const tokenData = {
       id: user._id,
       username: user.username,
       email: user.email,
     };
 
-    // create token
-    const token =  jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
+    // Create token
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
       expiresIn: "1d",
     });
+
+    // Set cookie with token
     const response = NextResponse.json({
       message: "Login successful",
       status: true,
@@ -43,7 +46,11 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message, status: error.status });
+  } catch (error: unknown) {
+    // Handle errors with proper type checking
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message, status: 500 }); // Use 500 for server errors
+    }
+    return NextResponse.json({ error: "An unexpected error occurred", status: 500 });
   }
 }
