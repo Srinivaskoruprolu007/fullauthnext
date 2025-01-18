@@ -3,18 +3,24 @@ import axios from "axios";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
+// Define types for error response
+interface ErrorResponse {
+  message: string;
+}
+
 export default function VerifyEmailPage() {
-  const [token, setToken] = useState("");
-  const [verified, setVerified] = useState(false);
-  const [error, setError] = useState(false);
+  const [token, setToken] = useState<string>("");
+  const [verified, setVerified] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const verifyUserEmail = async () => {
     try {
       await axios.post("/api/users/verifyemail", { token });
       setVerified(true);
-    } catch (error: any) {
-      setError(true);
-      console.log(error.response.data);
+    } catch (error) {
+      const err = error as { response: { data: ErrorResponse } }; // Type assertion
+      setError(err.response?.data?.message || "An unexpected error occurred");
+      console.log(err.response?.data);
     }
   };
 
@@ -48,7 +54,7 @@ export default function VerifyEmailPage() {
       )}
       {error && (
         <div>
-          <h2 className="text-2xl text-red-500">Error</h2>
+          <h2 className="text-2xl text-red-500">{error}</h2>
         </div>
       )}
     </div>
