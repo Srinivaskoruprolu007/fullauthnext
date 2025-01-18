@@ -1,3 +1,4 @@
+"use client"
 // src/app/profile/[id]/page.tsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
