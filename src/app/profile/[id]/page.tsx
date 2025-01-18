@@ -3,9 +3,8 @@ export default async function UserProfile({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const slug = (await params).id;
-  console.log(slug);
-  
+  const { id } = await params;
+
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-700">
       <h1 className="text-5xl font-bold tracking-wide">Profile</h1>
@@ -13,7 +12,7 @@ export default async function UserProfile({
       <p className="text-4xl font-semibold tracking-wide">
         Profile page
         <span className="bg-orange-500 text-black rounded-full px-4 py-2 ml-4">
-          {slug}
+          {id}
         </span>
       </p>
     </div>
