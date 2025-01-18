@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+
 interface UserProfileProps {
   params: {
     id: string;
@@ -5,6 +7,10 @@ interface UserProfileProps {
 }
 
 export default function UserProfile({ params }: UserProfileProps) {
+  if (!params?.id) {
+    notFound(); // Optional: handle the case when `id` is not found
+  }
+
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
       <h1 className="text-5xl font-bold tracking-wide">Profile</h1>
@@ -18,5 +24,3 @@ export default function UserProfile({ params }: UserProfileProps) {
     </div>
   );
 }
-
-
