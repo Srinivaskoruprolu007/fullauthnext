@@ -1,7 +1,6 @@
-"use client";
-import React, { useState, useEffect } from "react";
+// src/app/profile/[id]/page.tsx
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 
 interface User {
   username: string;
@@ -9,11 +8,7 @@ interface User {
   // Add other user properties as needed
 }
 
-interface UserProfileParams {
-  id: string;
-}
-
-const UserProfile = ({ params }: { params: UserProfileParams }) => {
+const UserProfile = ({ params }: { params: { id: string } }) => {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState<string | null>(null);
 
